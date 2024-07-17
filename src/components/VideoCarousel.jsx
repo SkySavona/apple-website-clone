@@ -16,6 +16,7 @@ const VideoCarousel = () => {
     isEnd: false,
     startPlay: false,
     videoId: 0,
+    videoMuted: true,
     isLastVideo: false,
     isPlaying: false,
   });
