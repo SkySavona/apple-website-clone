@@ -8,8 +8,8 @@ Note: This project is for educational and skill demonstration purposes only. It 
 
 ## Live Demo
 
-May have trouble accessing site.
-(https://apple-website-clone-kappa.vercel.app/)
+Note: May have trouble accessing site.
+(https://apple-website-clone-iota.vercel.app/)
 
 ## Features
 
@@ -98,8 +98,8 @@ apple_website_clone/
 
 ## Deployment
 
-May have trouble accessing site.
-(https://apple-website-clone-kappa.vercel.app/)
+Note: May have trouble accessing site.
+(https://apple-website-clone-iota.vercel.app/)
 
 ## Contributing
 
