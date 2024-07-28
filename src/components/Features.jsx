@@ -22,8 +22,16 @@ const Features = () => {
     animateWithGsap("#features_title", { y: 0, opacity: 1 });
     animateWithGsap(
       ".g_grow",
-      { scale: 1, opacity: 1, ease: "power1" },
-      { scrub: 5.5 }
+      { scale: 1, opacity: 1, ease: "power2", duration: 500 },
+      {
+        scrub: true,
+        scrollTrigger: {
+          trigger: ".g_grow",
+          start: "top bottom",
+          end: "bottom top",
+          scrub: 5.5,
+        },
+      }
     );
     animateWithGsap(".g_text", {
       y: 0,
@@ -34,7 +42,10 @@ const Features = () => {
   }, []);
 
   return (
-    <section className="common-padding bg-zinc relative overflow-hidden">
+    <section
+      id="features"
+      className="common-padding bg-zinc relative overflow-hidden"
+    >
       <div className="screen-max-wdith">
         <div className="mb-12 w-full">
           <h1 id="features_title" className="section-heading">

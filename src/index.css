@@ -17,21 +17,25 @@ body {
   border-color: #3b3b3b;
   user-select: none;
   overflow-x: hidden;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.5) transparent;
 }
 
 html::-webkit-scrollbar,
 body::-webkit-scrollbar {
-  display: none;
-  width: 0;
-  height: 0;
+  width: 6px;
 }
 
-html,
-body {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
+html::-webkit-scrollbar-track,
+body::-webkit-scrollbar-track {
+  background: transparent;
 }
 
+html::-webkit-scrollbar-thumb,
+body::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.5);
+  border-radius: 3px;
+}
 @supports (-webkit-overflow-scrolling: touch) {
   html,
   body {
@@ -41,6 +45,17 @@ body {
 }
 canvas {
   touch-action: none;
+}
+
+.feature-video {
+  transition: transform 0.8s ease, opacity 0.8s ease;
+  transform: scale(0.95);
+  opacity: 0.5;
+}
+
+.feature-video.in-view {
+  transform: scale(1);
+  opacity: 1;
 }
 
 .screen-max-width {

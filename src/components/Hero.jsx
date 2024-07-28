@@ -25,12 +25,12 @@ const Hero = () => {
   }, []);
 
   useGSAP(() => {
-    gsap.to("#hero", { opacity: 1, delay: 2.1});
-    gsap.to("#cta", { opacity: 1, y: -50, delay: 2 });
+    gsap.to("#hero", { opacity: 1, delay: 2.5});
+    gsap.to("#cta", { opacity: 1, y: -50, delay: 2.4 });
   }, []);
 
   return (
-    <section className="w-full bg-black flex-center flex-col md:pr-12 h-screen md:h-[80vh] lg:h-screen sm:h-[120vh]">
+    <section className="w-full bg-black flex-center flex-col md:pr-12 h-screen md:h-[80vh] lg:h-screen">
       <div className=" flex-center flex-col">
         <p id="hero" className="hero-title">
           iPhone 15 Pro

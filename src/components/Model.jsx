@@ -1,14 +1,13 @@
-import gsap from "gsap";
-import { useGSAP } from "@gsap/react";
-import ModelView from "./ModelView";
-import { useEffect, useRef, useState } from "react";
 import { yellowImg } from "../utils";
-
-import * as THREE from "three";
-import { Canvas } from "@react-three/fiber";
+import { useGSAP } from "@gsap/react";
+import gsap from "gsap";
 import { View } from "@react-three/drei";
+import { Canvas } from "@react-three/fiber";
+import * as THREE from "three";
 import { models, sizes } from "../constants";
+import ModelView from "./ModelView";
 import { animateWithGsapTimeline } from "../utils/animations";
+import { useEffect, useRef, useState } from "react";
 
 const Model = () => {
   const [size, setSize] = useState("small");
@@ -17,6 +16,9 @@ const Model = () => {
     color: ["#8F8A81", "#FFE7B9", "#6F6C64"],
     img: yellowImg,
   });
+
+  const [isUpClicked, setIsUpClicked] = useState(false);
+  const [isDownClicked, setIsDownClicked] = useState(false);
 
   const cameraControlSmall = useRef();
   const cameraControlLarge = useRef();
@@ -31,6 +33,8 @@ const Model = () => {
 
   useEffect(() => {
     if (size === "large") {
+      gsap.set("#view2", { display: "block" });
+
       animateWithGsapTimeline(tl, small, smallRotation, "#view1", "#view2", {
         transform: "translateX(-100%)",
         duration: 2,
@@ -42,12 +46,32 @@ const Model = () => {
         transform: "translateX(0)",
         duration: 2,
       });
+
+      tl.to("#view2", { display: "none", delay: 2 });
     }
   }, [size]);
 
   useGSAP(() => {
     gsap.to("#heading", { y: 0, opacity: 1 });
   }, []);
+
+  const handleScrollUp = () => {
+    setIsUpClicked(true);
+    const highlightsSection = document.getElementById("highlights");
+    if (highlightsSection) {
+      highlightsSection.scrollIntoView({ behavior: "smooth" });
+    }
+    setTimeout(() => setIsUpClicked(false), 300);
+  };
+
+  const handleScrollDown = () => {
+    setIsDownClicked(true);
+    const featuresSection = document.getElementById("features");
+    if (featuresSection) {
+      featuresSection.scrollIntoView({ behavior: "smooth" });
+    }
+    setTimeout(() => setIsDownClicked(false), 300);
+  };
 
   return (
     <section className="common-padding">
@@ -67,16 +91,17 @@ const Model = () => {
               item={model}
               size={size}
             />
-
-            <ModelView
-              index={2}
-              groupRef={large}
-              gsapType="view2"
-              controlRef={cameraControlLarge}
-              setRotationState={setLargeRotation}
-              item={model}
-              size={size}
-            />
+            {size === "large" && (
+              <ModelView
+                index={2}
+                groupRef={large}
+                gsapType="view2"
+                controlRef={cameraControlLarge}
+                setRotationState={setLargeRotation}
+                item={model}
+                size={size}
+              />
+            )}
 
             <Canvas
               className="w-full h-full"
@@ -92,6 +117,29 @@ const Model = () => {
             >
               <View.Port />
             </Canvas>
+
+            <div className="absolute top-4 right-4">
+              <button
+                onClick={handleScrollUp}
+                className={`bg-white p-2 rounded-full transition-opacity duration-300 ${
+                  isUpClicked ? "bg-opacity-25" : "bg-opacity-50"
+                }`}
+                aria-label="Scroll to highlights section"
+              >
+                ↑
+              </button>
+            </div>
+            <div className="absolute bottom-4 right-4">
+              <button
+                onClick={handleScrollDown}
+                className={`bg-white p-2 rounded-full transition-opacity duration-300 ${
+                  isDownClicked ? "bg-opacity-25" : "bg-opacity-50"
+                }`}
+                aria-label="Scroll to features section"
+              >
+                ↓
+              </button>
+            </div>
           </div>
 
           <div className="mx-auto w-full">
