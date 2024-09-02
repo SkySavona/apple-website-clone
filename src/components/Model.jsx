@@ -1,13 +1,14 @@
-import { yellowImg } from "../utils";
-import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
-import { View } from "@react-three/drei";
-import { Canvas } from "@react-three/fiber";
-import * as THREE from "three";
-import { models, sizes } from "../constants";
+import { useGSAP } from "@gsap/react";
 import ModelView from "./ModelView";
+import { useRef, useState } from "react";
+import { yellowImg } from "../utils";
+
+import * as THREE from "three";
+import { Canvas } from "@react-three/fiber";
+import { View } from "@react-three/drei";
+import { models, sizes } from "../constants";
 import { animateWithGsapTimeline } from "../utils/animations";
-import { useEffect, useRef, useState } from "react";
 
 const Model = () => {
   const [size, setSize] = useState("small");
@@ -17,8 +18,7 @@ const Model = () => {
     img: yellowImg,
   });
 
-  const [isUpClicked, setIsUpClicked] = useState(false);
-  const [isDownClicked, setIsDownClicked] = useState(false);
+  const [renderLargeModel, setRenderLargeModel] = useState(false);
 
   const cameraControlSmall = useRef();
   const cameraControlLarge = useRef();
@@ -31,47 +31,38 @@ const Model = () => {
 
   const tl = gsap.timeline();
 
-  useEffect(() => {
+  // Handle animations based on the size
+  useGSAP(() => {
     if (size === "large") {
-      gsap.set("#view2", { display: "block" });
-
       animateWithGsapTimeline(tl, small, smallRotation, "#view1", "#view2", {
         transform: "translateX(-100%)",
         duration: 2,
       });
-    }
-
-    if (size === "small") {
+    } else if (size === "small") {
       animateWithGsapTimeline(tl, large, largeRotation, "#view2", "#view1", {
         transform: "translateX(0)",
         duration: 2,
       });
-
-      tl.to("#view2", { display: "none", delay: 2 });
     }
-  }, [size]);
+  }, [size, smallRotation, largeRotation]);
 
+  // Trigger to render large model when scrolling to the specific section
+  useGSAP(() => {
+    const triggerPoint = "#view2"; // Element ID where the large model should start rendering
+
+    gsap.to(triggerPoint, {
+      scrollTrigger: {
+        trigger: triggerPoint,
+        start: "top center", // Adjust this based on when you want the model to appear
+        onEnter: () => setRenderLargeModel(true),
+      },
+    });
+  }, []);
+
+  // Initial heading animation
   useGSAP(() => {
     gsap.to("#heading", { y: 0, opacity: 1 });
   }, []);
-
-  const handleScrollUp = () => {
-    setIsUpClicked(true);
-    const highlightsSection = document.getElementById("highlights");
-    if (highlightsSection) {
-      highlightsSection.scrollIntoView({ behavior: "smooth" });
-    }
-    setTimeout(() => setIsUpClicked(false), 300);
-  };
-
-  const handleScrollDown = () => {
-    setIsDownClicked(true);
-    const featuresSection = document.getElementById("features");
-    if (featuresSection) {
-      featuresSection.scrollIntoView({ behavior: "smooth" });
-    }
-    setTimeout(() => setIsDownClicked(false), 300);
-  };
 
   return (
     <section className="common-padding">
@@ -91,7 +82,8 @@ const Model = () => {
               item={model}
               size={size}
             />
-            {size === "large" && (
+
+            {renderLargeModel && (
               <ModelView
                 index={2}
                 groupRef={large}
@@ -117,29 +109,6 @@ const Model = () => {
             >
               <View.Port />
             </Canvas>
-
-            <div className="absolute top-4 right-4">
-              <button
-                onClick={handleScrollUp}
-                className={`bg-white p-2 rounded-full transition-opacity duration-300 ${
-                  isUpClicked ? "bg-opacity-25" : "bg-opacity-50"
-                }`}
-                aria-label="Scroll to highlights section"
-              >
-                ↑
-              </button>
-            </div>
-            <div className="absolute bottom-4 right-4">
-              <button
-                onClick={handleScrollDown}
-                className={`bg-white p-2 rounded-full transition-opacity duration-300 ${
-                  isDownClicked ? "bg-opacity-25" : "bg-opacity-50"
-                }`}
-                aria-label="Scroll to features section"
-              >
-                ↓
-              </button>
-            </div>
           </div>
 
           <div className="mx-auto w-full">
